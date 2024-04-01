@@ -1,10 +1,8 @@
 [package]
-name = "map-alg-playground"
+name = "procedural-map-generator"
 version = "0.1.0"
 edition = "2021"
 authors = ["Alexander Solovyov"]
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 nannou = "0.19.0"

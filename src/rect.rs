@@ -5,10 +5,6 @@ pub struct Point {
 }
 
 impl Point {
-    pub fn length(&self) -> i32 {
-        i32::abs(self.x - self.y)
-    }
-
     pub fn create(x: i32, y: i32) -> Point {
         Point {x, y}
     }

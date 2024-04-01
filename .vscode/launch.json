@@ -7,15 +7,15 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'map-alg-playground'",
+            "name": "Debug executable 'procedural-map-generator'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=map-alg-playground",
-                    "--package=map-alg-playground"
+                    "--bin=procedural-map-generator",
+                    "--package=procedural-map-generator"
                 ],
                 "filter": {
-                    "name": "map-alg-playground",
+                    "name": "procedural-map-generator",
                     "kind": "bin"
                 }
             },
@@ -25,16 +25,16 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'map-alg-playground'",
+            "name": "Debug unit tests in executable 'procedural-map-generator'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=map-alg-playground",
-                    "--package=map-alg-playground"
+                    "--bin=procedural-map-generator",
+                    "--package=procedural-map-generator"
                 ],
                 "filter": {
-                    "name": "map-alg-playground",
+                    "name": "procedural-map-generator",
                     "kind": "bin"
                 }
             },

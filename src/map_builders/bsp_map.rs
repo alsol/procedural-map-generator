@@ -49,17 +49,16 @@ impl MapBuilder for BspMapBuilder {
         for i in 0..(self.rooms.len() - 1) {
             let room = self.rooms[i];
             let next_room = self.rooms[i+1];
+
             let start_x = room.lower.x + rng.gen_range(0..room.width());
-            let start_y = room.lower.y + (rng.gen_range(0..i32::abs(room.lower.y - room.upper.y)));
-            let end_x = next_room.lower.x + (rng.gen_range(0..i32::abs(next_room.lower.x - next_room.upper.x)));
-            let end_y = next_room.lower.y + (rng.gen_range(0..i32::abs(next_room.lower.y - next_room.upper.y)));
-            if rng.gen() {
-                apply_horizontal_tunnel(&mut self.map, start_x, end_x, start_y);
-                apply_vertical_tunnel(&mut self.map, start_y, end_y, end_x);
-            } else {
-                apply_vertical_tunnel(&mut self.map, start_y, end_y, start_x);
-                apply_horizontal_tunnel(&mut self.map, start_x, end_x, end_y);
-            }   
+            let start_y = room.lower.y + rng.gen_range(0..room.height());
+
+            let end_x = next_room.lower.x + (rng.gen_range(0..next_room.height()));
+            let end_y = next_room.lower.y + (rng.gen_range(0..next_room.width()));
+
+            
+            self.draw_corridor(&mut rng, Point::create(start_x, start_y), Point::create(end_x, end_y));
+
             self.take_snapshot();
         }
         
@@ -120,9 +119,12 @@ impl BspMapBuilder {
         let mut result = rect;
         let rect_width = rect.width();
         let rect_height = rect.height();
+
+        const MIN_SIZE: i32 = 3;
+        const MAX_SIZE: i32 = 10;
     
-        let w = i32::max(3, rng.gen_range(1..=i32::min(rect_width, 10))-1) + 1;
-        let h = i32::max(3, rng.gen_range(1..=i32::min(rect_height, 10))-1) + 1;
+        let w = i32::max(MIN_SIZE, rng.gen_range(1..=i32::min(rect_width, MAX_SIZE))) + 1;
+        let h = i32::max(MIN_SIZE, rng.gen_range(1..=i32::min(rect_height, MAX_SIZE))) + 1;
     
         result.lower.x += rng.gen_range(1..=6)-1;
         result.lower.y += rng.gen_range(1..=6)-1;
@@ -159,24 +161,14 @@ impl BspMapBuilder {
         can_build
     }
 
-    fn draw_corridor(&mut self, start: Point, finish: Point) {
-        let mut x = start.x;
-        let mut y = start.x;
-    
-        while x != finish.x || y != finish.y {
-            if x < finish.x {
-                x += 1;
-            } else if x > finish.x {
-                x -= 1;
-            } else if y < finish.y {
-                y += 1;
-            } else if y > finish.y {
-                y -= 1;
-            }
-    
-            let idx = self.map.xy_idx(x, y);
-            self.map.tiles[idx] = TileType::Tunnel;
-        }
+    fn draw_corridor(&mut self, rng : &mut ThreadRng, start: Point, end: Point) {
+        if rng.gen() {
+            apply_horizontal_tunnel(&mut self.map, start.x, end.x, start.y);
+            apply_vertical_tunnel(&mut self.map, start.y, end.y, end.x);
+        } else {
+            apply_vertical_tunnel(&mut self.map, start.y, end.y, start.x);
+            apply_horizontal_tunnel(&mut self.map, start.x, end.x, end.y);
+        }   
     }
 
     pub fn new() -> BspMapBuilder {

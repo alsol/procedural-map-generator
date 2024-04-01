@@ -20,6 +20,14 @@ pub fn simple_builder() -> Box<dyn MapBuilder> {
     Box::new(SimpleMapBuilder::new())
 }
 
-pub fn random_builder() -> Box<dyn MapBuilder> {
+pub fn bsp_builder() -> Box<dyn MapBuilder> {
     Box::new(BspMapBuilder::new())
+}
+
+pub fn random_builder() -> Box<dyn MapBuilder> {
+    if rand::random() {
+        bsp_builder()
+    } else {
+        simple_builder()
+    }
 }
